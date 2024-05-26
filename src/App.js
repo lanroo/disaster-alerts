@@ -7,6 +7,7 @@ function App() {
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
+    console.log(`Filtro alterado: ${name} = ${value}`);
     setFilter({ ...filter, [name]: value });
   };
 
@@ -20,7 +21,7 @@ function App() {
             <option value="all">Todos</option>
             <option value="flood">Enchente</option>
             <option value="earthquake">Terremoto</option>
-            {/* outros */}
+            {/* Adicione mais tipos conforme necessário */}
           </select>
         </label>
         <label>
@@ -35,6 +36,13 @@ function App() {
         </label>
       </div>
       <DisasterAlertMap filter={filter} />
+      <div className="legend">
+        <h3>Legenda</h3>
+        <p><img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png" alt="Red Marker" /> Alto Risco</p>
+        <p><img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png" alt="Orange Marker" /> Risco Moderado</p>
+        <p><img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png" alt="Yellow Marker" /> Risco Baixo</p>
+        <p><img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png" alt="Green Marker" /> Sem Risco</p>
+      </div>
     </div>
   );
 }

@@ -3,22 +3,24 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Definindo ícones personalizados para os marcadores
-const iconUrl = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png';
-const iconRetinaUrl = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png';
-const shadowUrl = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png';
+// Função para definir ícones personalizados com base no nível de risco
+const getIcon = (risk) => {
+  const iconUrl = {
+    red: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+    orange: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png',
+    yellow: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png',
+    green: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
+  }[risk] || 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png';
 
-const DefaultIcon = L.icon({
-  iconUrl,
-  iconRetinaUrl,
-  shadowUrl,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
+  return L.icon({
+    iconUrl,
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+};
 
 const DisasterAlertMap = ({ filter }) => {
   const [alerts, setAlerts] = useState([]);
@@ -43,10 +45,12 @@ const DisasterAlertMap = ({ filter }) => {
     <MapContainer center={[20, 0]} zoom={2} style={{ height: '100vh', width: '100%' }}>
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       {alerts.map((alert, index) => (
-        <Marker key={index} position={[alert.latitude, alert.longitude]} icon={DefaultIcon}>
+        <Marker key={index} position={[alert.latitude, alert.longitude]} icon={getIcon(alert.risk)}>
           <Popup>
             <b>{alert.title}</b><br />
-            {alert.description}
+            {alert.description}<br />
+            Tipo: {alert.type}<br />
+            Nível de Risco: {alert.risk}
           </Popup>
         </Marker>
       ))}
